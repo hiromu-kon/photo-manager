@@ -4,4 +4,18 @@ class ApplicationController < ActionController::Base
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
+
+  private
+
+  def current_user
+    return nil unless session[:user_id]
+
+    @current_user ||= User.find_by(id: session[:user_id])
+  end
+
+  def require_login
+    return if current_user
+
+    redirect_to root_path
+  end
 end
