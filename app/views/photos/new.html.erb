@@ -1,0 +1,28 @@
+<h1>写真アップロード画面</h1>
+
+<% if @errors.present? %>
+  <ul style="color: red;">
+    <% @errors.each do |error| %>
+      <li><%= error %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= form_with url: photos_path, method: :post, scope: :photo, local: true, multipart: true do |f| %>
+  <div>
+    <%= f.label :title, "タイトル" %><br>
+    <%= f.text_field :title, value: @title %>
+  </div>
+
+  <div>
+    <%= f.label :image, "画像ファイル" %><br>
+    <%= f.file_field :image %>
+  </div>
+
+  <div>
+    <%= f.submit "アップロード" %>
+  </div>
+<% end %>
+
+<p><%= link_to "写真一覧画面に戻る", photos_path %></p>
+<p><%= link_to "ログアウト", logout_path, data: { turbo_method: :delete } %></p>

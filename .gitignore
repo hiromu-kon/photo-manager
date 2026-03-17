@@ -34,3 +34,5 @@
 /config/*.key
 
 .kamal/secrets
+/public/uploads/*
+!/public/uploads/.keep
