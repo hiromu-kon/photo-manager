@@ -1,6 +1,7 @@
 <h1>写真一覧</h1>
 
 <p><%= link_to "写真アップロード画面へ", new_photo_path %></p>
+<p><%= link_to "MyTweetAppと連携", oauth_authorize_path %></p>
 <p><%= link_to "ログアウト", logout_path, data: { turbo_method: :delete } %></p>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
@@ -8,7 +9,7 @@
   <div>
     <p>タイトル: <%= photo.title %></p>
     <% if photo.image.attached? %>
-    <p>画像ファイル: <%= photo.image.filename.to_s %></p>
+    <p>画像:</p>
     <p><%= image_tag(photo.image, alt: photo.title, width: 200) %></p>
     <% end %>
   </div>
