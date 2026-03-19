@@ -1,24 +1,31 @@
-# README
+# 写真管理アプリケーション
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## セットアップ
+1. リポジトリを取得
+   ```bash
+   git clone https://github.com/hiromu-kon/photo-manager.git
+   cd photo-manager
+   ```
 
-Things you may want to cover:
+2. 鍵を`config/credentials/development.key`に配置
 
-* Ruby version
+3. アプリケーションを起動
+   ```bash
+   docker compose up --build
+   ```
 
-* System dependencies
+4. 起動後、`http://localhost:3000`にアクセス:
 
-* Configuration
+5. seedデータ投入
+   ```bash
+   docker compose exec app bin/rails db:seed
+   ```
 
-* Database creation
+6. アプリケーションにログイン
+  - email: `test@example.com`
+  - password: `password123`
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## テスト実行
+```bash
+docker compose run --rm app bash -lc "bundle install && DATABASE_URL=postgres://postgres:postgres@db:5432/app_test RAILS_ENV=test bin/rails test"
+```
