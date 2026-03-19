@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   get "/oauth/authorize", to: "oauth#authorize"
   get "/oauth/callback", to: "oauth#callback"
 
-  resources :photos, only: [ :index, :new, :create ]
+  resources :photos, only: [ :index, :new, :create ] do
+    post :tweet, on: :member
+  end
 end
