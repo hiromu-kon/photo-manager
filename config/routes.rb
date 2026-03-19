@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   delete "/logout", to: "sessions#destroy"
 
   get "/oauth/authorize", to: "oauth#authorize"
+  get "/oauth/callback", to: "oauth#callback"
 
   resources :photos, only: [ :index, :new, :create ]
 end
