@@ -1,5 +1,12 @@
 <h1>写真一覧</h1>
 
+<% if flash[:notice].present? %>
+  <p style="color: green;"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert].present? %>
+  <p style="color: red;"><%= flash[:alert] %></p>
+<% end %>
+
 <p><%= link_to "写真アップロード画面へ", new_photo_path %></p>
 <p><%= link_to "MyTweetAppと連携", oauth_authorize_path %></p>
 <p><%= link_to "ログアウト", logout_path, data: { turbo_method: :delete } %></p>
@@ -11,6 +18,9 @@
     <% if photo.image.attached? %>
     <p>画像:</p>
     <p><%= image_tag(photo.image, alt: photo.title, width: 200) %></p>
+    <% if session[:oauth_access_token].present? %>
+    <p><%= button_to "ツイートする", tweet_photo_path(photo), method: :post %></p>
+    <% end %>
     <% end %>
   </div>
   <% end %>

@@ -1,5 +1,10 @@
+require "net/http"
+require "json"
+
 class PhotosController < ApplicationController
   before_action :require_login
+
+  TWEET_API_URL = "http://unifa-recruit-my-tweet-app.ap-northeast-1.elasticbeanstalk.com/api/tweets".freeze
 
   def index
     @photos = current_user.photos.order(created_at: :desc)
@@ -27,6 +32,44 @@ class PhotosController < ApplicationController
     photo.image.attach(uploaded_image)
     photo.save!
 
+    redirect_to photos_path
+  end
+
+  def tweet
+    photo = current_user.photos.find(params[:id])
+    access_token = session[:oauth_access_token].to_s
+    if access_token.blank?
+      flash[:alert] = "OAuth連携が必要です"
+      return redirect_to photos_path
+    end
+    unless photo.image.attached?
+      flash[:alert] = "画像が見つからないためツイートできません"
+      return redirect_to photos_path
+    end
+
+    uri = URI.parse(TWEET_API_URL)
+    payload = {
+      text: photo.title,
+      url: url_for(photo.image)
+    }
+    body = payload.to_json
+    headers = {
+      "Content-Type" => "application/json",
+      "Authorization" => "Bearer #{access_token}"
+    }
+
+    response = Net::HTTP.post(uri, body, headers)
+    if response.code.to_i == 201
+      flash[:notice] = "ツイートしました"
+    else
+      flash[:alert] = "ツイートに失敗しました (status: #{response.code})"
+    end
+    redirect_to photos_path
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = "写真が見つかりません"
+    redirect_to photos_path
+  rescue StandardError
+    flash[:alert] = "ツイートに失敗しました"
     redirect_to photos_path
   end
 end
